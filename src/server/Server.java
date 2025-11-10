@@ -42,11 +42,9 @@ public class Server {
                 
                 sendMessage("Enter Your Email: ");
                 String email = receiveMessage();
-                System.out.println(email);
                 
                 sendMessage("Enter Your Password:");
                 String password = receiveMessage();
-                System.out.println(password);
                 
                 //Check Email Exist 
                 String email_check =  "SELECT * FROM users WHERE email = ? AND password = ?";
@@ -55,11 +53,49 @@ public class Server {
                 stmt.setString(2, password);
                 ResultSet rs = stmt.executeQuery();
                 
-                
                 if (rs.next()){
-                     int userId = rs.getInt("id");
-                     sendMessage("Login successful! " + userId);
-                     
+                    
+                   int userId = rs.getInt("id");
+                   System.out.println(userId);
+                   
+                   //log the login data in login Hidtory
+                   String insertLoginHistory = "INSERT INTO login_history (user_id) VALUES (?)";
+                   PreparedStatement historyStmt = conn.prepareStatement(insertLoginHistory);
+                   historyStmt.setInt(1, userId);
+                   historyStmt.executeUpdate();
+                   
+                   //All user Informatios
+                   String fullInfoQuery = 
+                    "SELECT " +
+                    "    u.id, u.username, u.email, " +
+                    "    p.first_name, p.last_name, p.birthday, p.address, " +
+                    "    r.role " +
+                    "FROM users u " +
+                    "LEFT JOIN profile p ON u.id = p.user_id " +
+                    "LEFT JOIN user_roles r ON u.id = r.user_id " +
+                    "WHERE u.id = ?";
+                   
+                   //Get Information From DB
+                   PreparedStatement fullstmt = conn.prepareStatement(fullInfoQuery);
+                   fullstmt.setInt(1, userId);
+                   ResultSet fullrs = fullstmt.executeQuery();
+                   
+                   if(fullrs.next()){
+                       
+                       //Return Data of a user login
+                       String username = fullrs.getString("username");
+                       String firstName = fullrs.getString("first_name");
+                       String lastName = fullrs.getString("last_name");
+                       String role = fullrs.getString("role");
+                       String emailDb = fullrs.getString("email");
+                       
+                       //Check Role Based
+                       if ("admin".equals(role)){
+                           sendMessage("Hello Admin How Are You !");
+                       }else{
+                           sendMessage("Hello Worker, Do Your Job !");
+                       }
+                   }
                 }else{
                     sendMessage("Invalid email or password!");
                 }
@@ -68,8 +104,8 @@ public class Server {
         }catch(Exception e){
             System.out.println(e);
         }finally{
-            //Close Ressources
             
+            //Close Ressources
             if (server != null) server.close();
             if (socket != null) socket.close();
             if (reader != null) reader.close();

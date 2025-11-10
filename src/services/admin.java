@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package server;
+package services;
 
 /**
  *
  * @author root
  */
-public class Sql_Statemnt {
+public class admin {
     
 }
