@@ -59,25 +59,11 @@ The system uses 4 core tables:
        public static final int DB_port = 3306;
    }
 
-> 3.**Compile and run the server:**
+## 📦 How to Run
 
-  javac -d . server/*.java
-  java server.Server
+### 3. Compile and run the server:
+```bash
+javac -d . server/*.java
+java server.Server
 
-> 4.**In another terminal, run the client:**
-
-  javac -d . client/*.java
-  java client.Client
-
-5.Architecture Highlights
-Single-threaded server (one client at a time — suitable for learning/demo)
-Client is role-agnostic: It only displays messages and sends input. All navigation logic lives on the server.
-Session handlers: AdminSession and WorkerSession classes encapsulate role-specific behavior.
-PreparedStatements: Used to prevent SQL injection.
-🚀 Future Improvements
-Add BCrypt password hashing
-Support multi-threaded clients (one thread per client)
-Implement logout and session timeout
-Add inventory and sales tables
-Migrate to a connection pool (e.g., HikariCP)
 
