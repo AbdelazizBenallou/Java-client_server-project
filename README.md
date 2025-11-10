@@ -59,11 +59,13 @@ The system uses 4 core tables:
        public static final int DB_port = 3306;
    }
 
-3.Compile and run the server:
+> 3.**Compile and run the server:**
+
   javac -d . server/*.java
   java server.Server
 
-4.In another terminal, run the client
+> 4.**In another terminal, run the client:**
+
   javac -d . client/*.java
   java client.Client
 
