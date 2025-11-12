@@ -5,10 +5,12 @@
  */
 package services;
 
+import java.io.IOException;
+
 /**
  *
  * @author root
  */
-public class admin {
-    
+public interface SessionHandler {
+    void handleSession() throws IOException;
 }

@@ -3,6 +3,9 @@ package server;
 import java.io.*;
 import java.net.*;
 import java.sql.*;
+import services.AdminSession;
+import services.WorkerSession;
+import services.SessionHandler;
 
 public class Server {
 
@@ -92,12 +95,18 @@ public class Server {
                         ResultSet profile = profileStmt.executeQuery();
 
                         if (profile.next()) {
+                            
                             String role = profile.getString("role");
-                            if ("admin".equals(role)) {
-                                sendMessage(output, "Hello Admin How Are You !");
-                            } else {
-                                sendMessage(output, "Hello Worker, Do Your Job !");
-                            }
+                            String displayName = profile.getString("first_name") != null ? profile.getString("first_name") : profile.getString("username");
+                            
+                            SessionHandler session;
+                           if ("admin".equals(role)) {
+                               session = new AdminSession(output, input, dbConnection, userId, displayName);
+                           } else {
+                               session = new WorkerSession(output, input, dbConnection, userId, displayName);
+                           }
+                           session.handleSession();
+                           
                         }
                     } else {
                         // Invalid credentials
